@@ -1,0 +1,20 @@
+INSERT INTO bank_users (user_id, username, password, first_name, last_name, email, is_admin)
+VALUES 
+(1, 'john_doe', 'password1', 'John', 'Doe', 'john@example.com', FALSE),
+(2, 'alice_smith', 'password2', 'Alice', 'Smith', 'alice@example.com', FALSE),
+(3, 'bob_jones', 'password3', 'Bob', 'Jones', 'bob@example.com', FALSE),
+(4, 'emily_wang', 'password4', 'Emily', 'Wang', 'emily@example.com', FALSE),
+(5, 'admin1', 'adminpass', 'Admin', 'One', 'admin1@example.com', TRUE),
+(6, 'sarah_miller', 'password6', 'Sarah', 'Miller', 'sarah@example.com', FALSE),
+(7, 'mike_brown', 'password7', 'Mike', 'Brown', 'mike@example.com', FALSE),
+(8, 'emma_taylor', 'password8', 'Emma', 'Taylor', 'emma@example.com', FALSE),
+(9, 'chris_clark', 'password9', 'Chris', 'Clark', 'chris@example.com', FALSE),
+(10, 'lisa_jackson', 'password10', 'Lisa', 'Jackson', 'lisa@example.com', FALSE),
+(11, 'admin2', 'adminpass', 'Admin', 'Two', 'admin2@example.com', TRUE),
+(12, 'jessica_white', 'password12', 'Jessica', 'White', 'white@example.com', FALSE),
+(13, 'david_martinez', 'password13', 'David', 'Martinez', 'david@example.com', FALSE),
+(14, 'samantha_green', 'password14', 'Samantha', 'Green', 'samantha@example.com', FALSE),
+(15, 'kevin_adams', 'password15', 'Kevin', 'Adams', 'kevin@example.com', FALSE);
+
+SELECT *
+FROM bank_users
