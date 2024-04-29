@@ -1,0 +1,24 @@
+login_button = tk.Button(form_frame, text="Log in", font=custom_font, width=15, command=login)
+login_button.pack(side=tk.LEFT, padx=10, pady=10)
+
+
+def login():
+    # Display options for login
+    login_window = tk.Toplevel(root)
+    login_window.title("Login")
+    login_window.geometry('200x150')
+    
+    login_label = tk.Label(login_window, text="Select login type:")
+    login_label.pack(pady=10)
+    
+    guest_button = tk.Button(login_window, text="Guest", width=15, command=login_as_guest)
+    guest_button.pack(pady=5)
+    
+    admin_button = tk.Button(login_window, text="Admin", width=15, command=login_as_admin)
+    admin_button.pack(pady=5)
+
+    def login_as_guest():
+    print("Login as guest")
+
+def login_as_admin():
+    print("Login as admin")
