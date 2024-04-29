@@ -1,0 +1,154 @@
+import random
+import tkinter as tk
+from tkinter import messagebox
+import mysql.connector
+from mysql.connector import Error
+#verifies whether the user has an account
+global has_account
+has_account = False
+global user_balance
+user_balance = None #user starts out with no balance
+
+def signup():
+    def register_user():
+        global has_account, user_balance
+        username = username_entry.get()
+        password = password_entry.get()
+
+        if username.strip() == '' or password.strip() == '':
+            messagebox.showerror("Signup Failed", "Username and password cannot be empty.")
+        elif username_exists(username):
+            messagebox.showerror("Signup Failed", "Username already exists")
+        else:
+            # verifies user info into table
+            messagebox.showinfo("Signup Successful", "Account created successfully")
+            has_account = True
+            user_balance = round(random.uniform(100.00, 5000.00), 2)
+            choice_menu()
+
+    signup_window = tk.Toplevel(root)
+    signup_window.title("Sign Up")
+
+    #get username information from user
+    username_label = tk.Label(signup_window, text="Username:")
+    username_label.grid(row=0, column=0, sticky=tk.W)
+    username_entry = tk.Entry(signup_window)
+    username_entry.grid(row=0, column=1, padx=10, pady=5)
+
+    #get password information from user
+    password_label = tk.Label(signup_window, text="Password:")
+    password_label.grid(row=1, column=0, sticky=tk.W)
+    password_entry = tk.Entry(signup_window, show="*")
+    password_entry.grid(row=1, column=1, padx=10, pady=5)
+    #similar to real verification applications, the password
+    #automatically converts to asteriks
+
+    #visual sign up button
+    signup_button = tk.Button(signup_window, text="Sign up", command=register_user)
+    signup_button.grid(row=2, columnspan=2, pady=10)
+
+def deposit():
+    #this'll ask the user to enter a deposit amount
+    deposit_amount = float(input("Enter the amount you want to deposit: $"))
+
+    #update the user's account balance in the database
+    #implement this in sql queries
+
+    messagebox.showinfo("Deposit", f"Deposit of ${deposit_amount} successful.")
+
+def withdraw():
+    global user_balance  # Access global variable
+    if user_balance is None:
+        messagebox.showerror("Error", "No balance available. Please log in or sign up.")
+    else:
+        # Ask for a withdrawal amount
+        withdrawal_amount = float(input("Enter the amount you want to withdraw: $"))
+        # Check if the withdrawal amount exceeds the current balance
+        if withdrawal_amount > user_balance:
+            messagebox.showerror("Withdraw", "Insufficient balance.")
+        else:
+            # Update the account balance after withdrawal
+            user_balance -= withdrawal_amount
+            messagebox.showinfo("Withdraw", f"Withdrawal of ${withdrawal_amount} successful. New balance: ${user_balance}")
+
+
+def check_balance():
+    global user_balance  # Access global variable
+    if user_balance is None:
+        messagebox.showerror("Error", "No balance available. Please log in or sign up.")
+    else:
+        messagebox.showinfo("Check Balance", f"Your current account balance is: ${user_balance}")
+def settings():
+    messagebox.showinfo("Settings", "Work in progress..") #placeholder
+
+
+def choice_menu():
+    for menu in form_frame.winfo_children():
+        menu.destroy()
+    deposit_button = tk.Button(form_frame, text="Deposit", font=custom_font, width=15, command=deposit)
+    deposit_button.pack(pady=10)
+
+    withdraw_button = tk.Button(form_frame, text="Withdraw", font=custom_font, width=15, command=withdraw)
+    withdraw_button.pack(pady=10)
+
+    check_balance_button = tk.Button(form_frame, text="Check Balance", font=custom_font, width=15, command=check_balance)
+    check_balance_button.pack(pady=10)
+
+    settings_button = tk.Button(form_frame, text="Settings", font=custom_font, width=15, command=settings)
+    settings_button.pack(pady=10)
+
+def connect_to_sql():
+    try:
+        connection = mysql.connector.connect(
+            user='root',
+            database='bank',
+            password='Nori@1724264159'
+        )
+        if connection.is_connected():
+            return connection
+    except Error as e:
+        return None
+
+def username_exists(username):
+    connection = connect_to_sql()
+    if connection:
+        try:
+            cursor = connection.cursor()
+            cursor.execute("SELECT username FROM bank_users")
+            rows = cursor.fetchall()
+            for row in rows:
+                if username == row[0]:
+                    return True
+            return False
+        except Error as e:
+            return None
+        finally:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
+
+def exit_app():
+    root.destroy()
+
+#font seems to default to original regardless
+custom_font = ("Helvetica", 16)
+
+root = tk.Tk()
+root.geometry('500x500')
+root.title("Banking GUI")
+root.configure(bg="#1b90cf")
+
+form_frame = tk.Frame(root, padx=20, pady=20)
+form_frame.pack(padx=20, pady=20, fill=tk.BOTH, expand=True)
+
+welcome_label = tk.Label(form_frame, text="Welcome to The Banking System.", font=custom_font)
+welcome_label.pack(pady=20)
+
+#these are the button in the first menu
+signup_button = tk.Button(form_frame, text="Sign up", font=custom_font, width=15, command=signup)
+signup_button.pack(side=tk.LEFT, padx=10, pady=10)
+
+exit_button = tk.Button(form_frame, text="Exit", font=custom_font, width=15, command=exit_app)
+exit_button.pack(side=tk.LEFT, padx=10, pady=10)
+
+root.mainloop()
